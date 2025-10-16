@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <title>Title</title>
+</head>
+<body>
+    {{define "message"}}
+    <table>
+        <th>nickname</th>
+        <th>message</th>
+        <th>date</th>
+        {{range .}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Message}}</td>
+            <td>{{.Date}}</td>
+        </tr>
+        {{end}}
+    </table>
+    {{end}}
+</body>
+</html>
