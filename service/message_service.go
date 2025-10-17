@@ -2,7 +2,7 @@ package service
 
 import "goSiteProject/model"
 
-var messageStorage = make([]model.Message, 100)
+var messageStorage = make([]model.Message, 0)
 
 func GetMesaages() []model.Message {
 	return messageStorage

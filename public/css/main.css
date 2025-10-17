@@ -1,0 +1,31 @@
+table {
+
+	width: 100%;
+
+	margin-bottom: 20px;
+
+	border: 1px solid #dddddd;
+
+	border-collapse: collapse; 
+
+}
+
+th {
+
+	font-weight: bold;
+
+	padding: 40px;
+
+	background: #fe00ff;
+
+	border: 1px solid #dddddd;
+
+}
+
+td {
+
+	border: 1px solid #dddddd;
+
+	padding: 5px;
+
+}
