@@ -10,4 +10,5 @@ EXPOSE 8080
 RUN apk update && apk upgrade 
 COPY --from=compiler /go_files/main .
 COPY /public ./public
+COPY /template ./template
 CMD ["./main"]

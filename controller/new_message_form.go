@@ -9,7 +9,7 @@ import (
 )
 
 func NewMessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	path := filepath.Join("public", "html", "new_message_form.html")
+	path := filepath.Join("template", "new_message_form.html")
 	tmpl, err := template.ParseFiles(path)
 	if err != nil {
 		http.Error(rw, err.Error(), 500)

@@ -17,7 +17,11 @@ func main() {
 }
 
 func routes(r *httprouter.Router) {
-	r.ServeFiles("/public/*filepath", http.Dir("./public"))
+
+	r.ServeFiles("/css/*filepath", http.Dir("./public/css"))
+	r.ServeFiles("/js/*filepath", http.Dir("./public/js"))
+	r.ServeFiles("/img/*filepath", http.Dir("./public/img"))
+
 	r.GET("/", controller.MessageWall)
 	r.GET("/new", controller.NewMessageWall)
 	r.POST("/create_message", controller.CreateMessage)
