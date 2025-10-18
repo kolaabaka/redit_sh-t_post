@@ -3,6 +3,7 @@ package main
 import (
 	"goSiteProject/controller"
 	"net/http"
+	"net/http/pprof"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -10,6 +11,10 @@ import (
 func main() {
 	r := httprouter.New()
 	routes(r)
+
+	//Handler for default profiler "pprof"
+	r.Handler("GET", "/debug/pprof/*item", http.HandlerFunc(pprof.Index))
+
 	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		panic(err)
@@ -17,7 +22,6 @@ func main() {
 }
 
 func routes(r *httprouter.Router) {
-
 	r.ServeFiles("/css/*filepath", http.Dir("./public/css"))
 	r.ServeFiles("/js/*filepath", http.Dir("./public/js"))
 	r.ServeFiles("/img/*filepath", http.Dir("./public/img"))
