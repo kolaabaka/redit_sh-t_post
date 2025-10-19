@@ -1,6 +1,8 @@
 package service
 
-import "goSiteProject/model"
+import (
+	"goSiteProject/model"
+)
 
 var messageStorage = make([]model.Message, 0)
 

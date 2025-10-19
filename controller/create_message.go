@@ -10,7 +10,7 @@ import (
 )
 
 func CreateMessage(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	message := r.FormValue("message")
+	message := r.FormValue("comment")
 	name := r.FormValue("name")
 
 	t := time.Now()

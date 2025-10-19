@@ -11,9 +11,10 @@ build:
 
 build-opt:
 ifeq ($(CURRENT_OS),windows)
+	set GOOS=windows
 	go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt.exe cmd/main.go
 else
-	go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt cmd/main.go
+	GOOS=linux go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt cmd/main.go
 endif
 
 
