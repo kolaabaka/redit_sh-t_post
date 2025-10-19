@@ -14,7 +14,8 @@ ifeq ($(CURRENT_OS),windows)
 	set GOOS=windows
 	go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt.exe cmd/main.go
 else
-	GOOS=linux go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt cmd/main.go
+	export GOOS=linux
+	go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt cmd/main.go
 endif
 
 

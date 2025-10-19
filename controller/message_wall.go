@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"goSiteProject/model"
 	"goSiteProject/service"
 	"html/template"
 	"net/http"
@@ -17,7 +18,20 @@ func MessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		return
 	}
 
-	err = tmpl.ExecuteTemplate(rw, "message", service.GetMesaages())
+	topic := r.URL.Query().Get("topic")
+
+	if topic == "" {
+		topic = "main"
+	}
+
+	messageList, err := service.GetMesaages(topic)
+
+	//Topic is not exists
+	if err != nil {
+		http.Error(rw, err.Error(), 404)
+	}
+
+	err = tmpl.ExecuteTemplate(rw, "message", model.MessageWallTempalte{Header: topic, MessageList: messageList})
 	if err != nil {
 		http.Error(rw, err.Error(), 500)
 		return

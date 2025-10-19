@@ -2,6 +2,7 @@ package main
 
 import (
 	"goSiteProject/controller"
+	"goSiteProject/service"
 	"net/http"
 	"net/http/pprof"
 
@@ -11,6 +12,9 @@ import (
 func main() {
 	r := httprouter.New()
 	routes(r)
+
+	//Check SQLite connection
+	service.MustCheckConnection()
 
 	//Handler for default profiler "pprof"
 	r.Handler("GET", "/debug/pprof/*item", http.HandlerFunc(pprof.Index))

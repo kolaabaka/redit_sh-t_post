@@ -6,11 +6,12 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+    {{.Header}}
     <table>
         <th>nickname</th>
         <th>message</th>
         <th>date</th>
-        {{range .}}
+        {{range .MessageList}}
         <tr>
             <td>{{.Name}}</td>
             <td>{{.Message}}</td>
