@@ -3,25 +3,32 @@ package main
 import (
 	"goSiteProject/controller"
 	"goSiteProject/service"
+	"log/slog"
 	"net/http"
 	"net/http/pprof"
+	"os"
+
+	colored_logger "github.com/kolaabaka/coloured_logger"
 
 	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
+	logger := slog.New(colored_logger.NewSimpleHandler(os.Stdout, slog.LevelDebug))
+
 	r := httprouter.New()
 	routes(r)
 
 	//Check SQLite connection
-	service.MustCheckConnection()
+	service.MustCheckConnection(*logger)
 
 	//Handler for default profiler "pprof"
 	r.Handler("GET", "/debug/pprof/*item", http.HandlerFunc(pprof.Index))
 
 	err := http.ListenAndServe(":8080", r)
 	if err != nil {
-		panic(err)
+		logger.Error(err.Error())
+		os.Exit(1)
 	}
 }
 

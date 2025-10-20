@@ -4,9 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 	"goSiteProject/model"
+	"log/slog"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+var logger slog.Logger
 
 func initConnection() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./db/topics.db")
@@ -16,12 +19,12 @@ func initConnection() (*sql.DB, error) {
 	return db, nil
 }
 
-func MustCheckConnection() {
+func MustCheckConnection(main_logger slog.Logger) {
+	logger = main_logger
 	db, err := initConnection()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("DataBase connection successfully")
 	tableExists(db)
 	db.Close()
 }
@@ -33,7 +36,7 @@ func tableExists(db *sql.DB) {
 	row, _ := db.Query(query)
 	for row.Next() {
 		row.Scan(&name)
-		fmt.Println(name)
+		logger.Info(name)
 	}
 }
 

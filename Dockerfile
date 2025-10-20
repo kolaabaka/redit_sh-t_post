@@ -1,14 +1,18 @@
-FROM alpine:3.14 AS compiler
-RUN apk add go && mkdir go_files && cd go_files
+FROM golang:1.21-alpine AS compiler
+RUN mkdir go_files && cd go_files && apk add gcc musl-dev
 WORKDIR go_files
 COPY . .
-#maximum version go 1.16
-RUN go mod tidy && go build cmd/main.go 
+#todo: build application with MAKE
+RUN go mod tidy && CGO_ENABLED=1 go build cmd/main.go 
 
 FROM alpine:3.14 AS server
-EXPOSE 8080
-RUN apk update && apk upgrade 
-COPY --from=compiler /go_files/main .
 COPY /public ./public
 COPY /template ./template
+EXPOSE 8080
+#todo: make migrations
+RUN apk update && apk upgrade\
+    && apk add sqlite\ 
+    && mkdir db\
+    && sqlite3 db/topics.db "CREATE TABLE IF NOT EXISTS main_table (name TEXT, message TEXT, date TEXT);"
+COPY --from=compiler /go/go_files/main .
 CMD ["./main"]

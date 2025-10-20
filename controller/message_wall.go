@@ -21,7 +21,7 @@ func MessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	topic := r.URL.Query().Get("topic")
 
 	if topic == "" {
-		topic = "main"
+		topic = "main_table"
 	}
 
 	messageList, err := service.GetMesaages(topic)
