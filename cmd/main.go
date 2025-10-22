@@ -1,8 +1,8 @@
 package main
 
 import (
-	"goSiteProject/controller"
-	"goSiteProject/service"
+	"goSiteProject/internal/controller"
+	"goSiteProject/internal/service"
 	"log/slog"
 	"net/http"
 	"net/http/pprof"

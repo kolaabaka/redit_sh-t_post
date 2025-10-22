@@ -1,4 +1,6 @@
 CURRENT_OS ?= windows
+CGO ?= 0
+EXEC_FILE_NAME ?= main
 
 #PREVENTS STRANGE BEHAVIOR IF IN THE PROJECT APEEAR FILE WITH NAME FROM PHONY LIST 
 .PHONY: build build-opt run clean 
@@ -7,15 +9,16 @@ run:
 	go run cmd/main.go
 
 build: 
-	go build cmd/main.go
+	go build -o $(EXEC_FILE_NAME) cmd/main.go
 
 build-opt:
 ifeq ($(CURRENT_OS),windows)
 	set GOOS=windows
-	go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt.exe cmd/main.go
+	set CGO_ENABLED=$(CGO)
+	go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./$(EXEC_FILE_NAME)_opt.exe cmd/main.go
 else
 	export GOOS=linux
-	go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./main_opt cmd/main.go
+	CGO_ENABLED=$(CGO) go build -trimpath -ldflags="-s -w -extldflags=-static" -o ./$(EXEC_FILE_NAME)_opt cmd/main.go
 endif
 
 
