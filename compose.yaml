@@ -1,0 +1,34 @@
+#version: "3"
+
+services:
+  golang_back:
+    container_name: golang_back
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    tty: true
+    networks:
+      - logger
+    restart: always
+
+  prometheus:
+    container_name: prometheus
+    build:
+      context: ./deploy_additiona_service/prometheus/
+      dockerfile: Dockerfile.prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
+    networks:
+      - logger
+    restart: unless-stopped
+    depends_on: 
+      - golang_back 
+
+networks:
+  logger:
+    driver: bridge

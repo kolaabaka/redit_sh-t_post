@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"goSiteProject/internal/monitoring"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -21,4 +22,7 @@ func NewMessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params
 		http.Error(rw, err.Error(), 500)
 		return
 	}
+
+	monitoring.IncrementEndpointHttpCounter("/new")
+	monitoring.IncrementTotalhttpCounter()
 }

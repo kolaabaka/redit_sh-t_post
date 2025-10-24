@@ -2,6 +2,7 @@ package controller
 
 import (
 	"goSiteProject/internal/model"
+	"goSiteProject/internal/monitoring"
 	"goSiteProject/internal/service"
 	"net/http"
 	"time"
@@ -21,4 +22,7 @@ func CreateMessage(rw http.ResponseWriter, r *http.Request, p httprouter.Params)
 	}
 
 	http.Redirect(rw, r, "/", http.StatusMovedPermanently)
+
+	monitoring.IncrementEndpointHttpCounter("/create_message")
+	monitoring.IncrementTotalhttpCounter()
 }

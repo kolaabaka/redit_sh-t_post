@@ -2,6 +2,7 @@ package main
 
 import (
 	"goSiteProject/internal/controller"
+	"goSiteProject/internal/monitoring"
 	"goSiteProject/internal/service"
 	"log/slog"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"os"
 
 	colored_logger "github.com/kolaabaka/coloured_logger"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -18,6 +20,8 @@ func main() {
 
 	r := httprouter.New()
 	routes(r)
+
+	monitoring.MustInitPrometheusStat()
 
 	//Check SQLite connection
 	service.MustCheckConnection(*logger)
@@ -40,4 +44,12 @@ func routes(r *httprouter.Router) {
 	r.GET("/", controller.MessageWall)
 	r.GET("/new", controller.NewMessageWall)
 	r.POST("/create_message", controller.CreateMessage)
+
+	r.GET("/metrics", adaptHandler(promhttp.Handler()))
+}
+
+func adaptHandler(handler http.Handler) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		handler.ServeHTTP(w, r)
+	}
 }

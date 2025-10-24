@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine AS compiler
+FROM golang:1.23-alpine AS compiler
 
 ARG EXEC_FILE_NAME
 ENV EXEC_FILE_NAME=${EXEC_FILE_NAME:-main}

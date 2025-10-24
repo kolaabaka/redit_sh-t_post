@@ -2,6 +2,7 @@ package controller
 
 import (
 	"goSiteProject/internal/model"
+	"goSiteProject/internal/monitoring"
 	"goSiteProject/internal/service"
 	"html/template"
 	"net/http"
@@ -36,4 +37,6 @@ func MessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		http.Error(rw, err.Error(), 500)
 		return
 	}
+	monitoring.IncrementEndpointHttpCounter("/")
+	monitoring.IncrementTotalhttpCounter()
 }
