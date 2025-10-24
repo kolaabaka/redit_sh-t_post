@@ -53,7 +53,7 @@ func MustInitPrometheusStat() {
 	prometheus.MustRegister(memoryUsage)
 	prometheus.MustRegister(memoryStats)
 	prometheus.MustRegister(gcStats)
-	go trackingMemmoryStatGauge()
+	go trackingMemoryStatGauge()
 }
 
 func IncrementEndpointHttpCounter(urlPath string) {
@@ -64,13 +64,12 @@ func IncrementTotalhttpCounter() {
 	totalHttpReqCounter.Inc()
 }
 
-func trackingMemmoryStatGauge() {
+func trackingMemoryStatGauge() {
 	var memStats = runtime.MemStats{}
 	var ticker = time.NewTicker(time.Second)
 	for {
 		<-ticker.C
 
-		time.Sleep(time.Second * 1)
 		runtime.ReadMemStats(&memStats)
 
 		updateMemoryMetrics(memStats)
