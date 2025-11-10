@@ -49,6 +49,7 @@ func routes(r *httprouter.Router) {
 	r.GET("/metrics", adaptHandler(promhttp.Handler()))
 
 	controller.InitTemplateMessageWall()
+	controller.InitTemplateMessageForm()
 }
 
 func adaptHandler(handler http.Handler) httprouter.Handle {
