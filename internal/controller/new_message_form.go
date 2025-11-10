@@ -9,15 +9,16 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func NewMessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	path := filepath.Join("template", "new_message_form.html")
-	tmpl, err := template.ParseFiles(path)
-	if err != nil {
-		http.Error(rw, err.Error(), 500)
-		return
-	}
+// Cache
+var tmplMessageForm *template.Template
 
-	err = tmpl.Execute(rw, nil)
+func InitTemplateMessageForm() {
+	path := filepath.Join("template", "new_message_form.html")
+	tmplMessageForm = template.Must(template.ParseFiles(path))
+}
+
+func NewMessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	err := tmplMessageForm.Execute(rw, nil)
 	if err != nil {
 		http.Error(rw, err.Error(), 500)
 		return

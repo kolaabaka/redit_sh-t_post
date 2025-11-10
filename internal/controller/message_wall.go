@@ -11,14 +11,15 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func MessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	path := filepath.Join("template", "index.html")
-	tmpl, err := template.ParseFiles(path)
-	if err != nil {
-		http.Error(rw, err.Error(), 500)
-		return
-	}
+// Cache
+var tmplMessageWall *template.Template
 
+func InitTemplateMessageWall() {
+	path := filepath.Join("template", "index.html")
+	tmplMessageWall = template.Must(template.ParseFiles(path))
+}
+
+func MessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	topic := r.URL.Query().Get("topic")
 
 	if topic == "" {
@@ -32,7 +33,7 @@ func MessageWall(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		http.Error(rw, err.Error(), 404)
 	}
 
-	err = tmpl.ExecuteTemplate(rw, "message", model.MessageWallTempalte{Header: topic, MessageList: messageList})
+	err = tmplMessageWall.ExecuteTemplate(rw, "message", model.MessageWallTempalte{Header: topic, MessageList: messageList})
 	if err != nil {
 		http.Error(rw, err.Error(), 500)
 		return

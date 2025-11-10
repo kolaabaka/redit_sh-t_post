@@ -15,6 +15,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+// TODO: switch httprouter to GIN
 func main() {
 	logger := slog.New(colored_logger.NewSimpleHandler(os.Stdout, slog.LevelDebug))
 
@@ -46,6 +47,8 @@ func routes(r *httprouter.Router) {
 	r.POST("/create_message", controller.CreateMessage)
 
 	r.GET("/metrics", adaptHandler(promhttp.Handler()))
+
+	controller.InitTemplateMessageWall()
 }
 
 func adaptHandler(handler http.Handler) httprouter.Handle {
