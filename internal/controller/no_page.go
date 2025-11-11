@@ -6,9 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewMessageWall(c *gin.Context) {
-	c.HTML(200, "new_message_form.html", nil)
+func NoPage(c *gin.Context) {
 
-	monitoring.IncrementEndpointHttpCounter("/new")
+	c.HTML(404, "no_page.html", nil)
 	monitoring.IncrementTotalhttpCounter()
 }

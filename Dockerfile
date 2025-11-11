@@ -4,7 +4,7 @@ ARG EXEC_FILE_NAME
 ENV EXEC_FILE_NAME=${EXEC_FILE_NAME:-main}
 
 RUN mkdir go_files && cd go_files && apk add gcc musl-dev && apk add make
-WORKDIR go_files
+WORKDIR /go/go_files
 COPY . .
 RUN go mod tidy && make build-opt CURRENT_OS=linux CGO=1 EXEC_FILE_NAME=${EXEC_FILE_NAME:-main}
 

@@ -4,16 +4,15 @@ import (
 	"goSiteProject/internal/model"
 	"goSiteProject/internal/monitoring"
 	"goSiteProject/internal/service"
-	"net/http"
 	"time"
 
-	"github.com/julienschmidt/httprouter"
+	"github.com/gin-gonic/gin"
 )
 
-func CreateMessage(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	message := r.FormValue("comment")
-	name := r.FormValue("name")
-	topic := r.FormValue("topic")
+func CreateMessage(c *gin.Context) {
+	message := c.PostForm("comment")
+	name := c.PostForm("name")
+	topic := c.PostForm("topic")
 
 	t := time.Now()
 
@@ -21,7 +20,7 @@ func CreateMessage(rw http.ResponseWriter, r *http.Request, p httprouter.Params)
 		service.AddMesaage(topic, model.Message{Name: name, Message: message, Date: t.Format("01-02-2006 15:04:05")})
 	}
 
-	http.Redirect(rw, r, "/", http.StatusMovedPermanently)
+	c.Redirect(301, "/")
 
 	monitoring.IncrementEndpointHttpCounter("/create_message")
 	monitoring.IncrementTotalhttpCounter()

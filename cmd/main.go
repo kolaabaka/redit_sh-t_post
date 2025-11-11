@@ -9,51 +9,42 @@ import (
 	"net/http/pprof"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	colored_logger "github.com/kolaabaka/coloured_logger"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-
-	"github.com/julienschmidt/httprouter"
 )
 
 // TODO: switch httprouter to GIN
 func main() {
 	logger := slog.New(colored_logger.NewSimpleHandler(os.Stdout, slog.LevelDebug))
 
-	r := httprouter.New()
-	routes(r)
-
 	monitoring.MustInitPrometheusStat()
 
 	//Check SQLite connection
 	service.MustCheckConnection(*logger)
 
-	//Handler for default profiler "pprof"
-	r.Handler("GET", "/debug/pprof/*item", http.HandlerFunc(pprof.Index))
+	r := gin.Default()
+	routes(r)
 
-	err := http.ListenAndServe(":8080", r)
+	//Handler for default profiler "pprof", using in Prometheus
+	r.GET("/debug/pprof/*item", gin.WrapH(http.HandlerFunc(pprof.Index)))
+
+	err := r.Run(":8080")
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
 }
 
-func routes(r *httprouter.Router) {
-	r.ServeFiles("/css/*filepath", http.Dir("./public/css"))
-	r.ServeFiles("/js/*filepath", http.Dir("./public/js"))
-	r.ServeFiles("/img/*filepath", http.Dir("./public/img"))
+func routes(r *gin.Engine) {
+	r.Static("/static", "./public")
+	r.LoadHTMLGlob("template/*")
 
 	r.GET("/", controller.MessageWall)
 	r.GET("/new", controller.NewMessageWall)
 	r.POST("/create_message", controller.CreateMessage)
 
-	r.GET("/metrics", adaptHandler(promhttp.Handler()))
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
-	controller.InitTemplateMessageWall()
-	controller.InitTemplateMessageForm()
-}
-
-func adaptHandler(handler http.Handler) httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		handler.ServeHTTP(w, r)
-	}
+	r.NoRoute(controller.NoPage)
 }
