@@ -3,6 +3,7 @@ package main
 import (
 	"goSiteProject/internal/controller"
 	"goSiteProject/internal/monitoring"
+	"goSiteProject/internal/repository"
 	"goSiteProject/internal/service"
 	"log/slog"
 	"net/http"
@@ -20,8 +21,9 @@ func main() {
 
 	monitoring.MustInitPrometheusStat()
 
+	service.MustInitService(logger)
 	//Check SQLite connection
-	service.MustCheckConnection(*logger)
+	repository.MustCheckConnection(logger)
 
 	r := gin.Default()
 	routes(r)
@@ -41,8 +43,12 @@ func routes(r *gin.Engine) {
 	r.LoadHTMLGlob("template/*")
 
 	r.GET("/", controller.MessageWall)
+
 	r.GET("/new", controller.NewMessageWall)
 	r.POST("/create_message", controller.CreateMessage)
+
+	r.GET("/login", controller.LoginPage)
+	r.POST("/login_form", controller.LoginFromPage)
 
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
