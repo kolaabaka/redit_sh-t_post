@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"goSiteProject/internal/controller"
 	"goSiteProject/internal/monitoring"
 	"goSiteProject/internal/repository"
@@ -9,6 +10,8 @@ import (
 	"net/http"
 	"net/http/pprof"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gin-gonic/gin"
 	colored_logger "github.com/kolaabaka/coloured_logger"
@@ -17,6 +20,17 @@ import (
 
 // TODO: switch httprouter to GIN
 func main() {
+	//server withoud default configuration
+	r := gin.Default()
+	routes(r)
+
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
+
+	go server.ListenAndServe()
+
 	logger := slog.New(colored_logger.NewSimpleHandler(os.Stdout, slog.LevelDebug))
 
 	monitoring.MustInitPrometheusStat()
@@ -25,17 +39,13 @@ func main() {
 	//Check SQLite connection
 	repository.MustCheckConnection(logger)
 
-	r := gin.Default()
-	routes(r)
+	context := context.TODO() //funny find =)
 
-	//Handler for default profiler "pprof", using in Prometheus
-	r.GET("/debug/pprof/*item", gin.WrapH(http.HandlerFunc(pprof.Index)))
-
-	err := r.Run(":8080")
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP) //SIGTERM - kill <pid>, SIGHUP - close terminal
+	<-done
+	logger.Warn("OS was interrupted")
+	server.Shutdown(context)
 }
 
 func routes(r *gin.Engine) {
@@ -59,6 +69,9 @@ func routes(r *gin.Engine) {
 	}
 
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
+	//Handler for default profiler "pprof", using in Prometheus
+	r.GET("/debug/pprof/*item", gin.WrapH(http.HandlerFunc(pprof.Index)))
 
 	r.NoRoute(controller.NoPage)
 }
