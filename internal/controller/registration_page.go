@@ -1,7 +1,33 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"goSiteProject/internal/repository"
+
+	"github.com/gin-gonic/gin"
+)
 
 func RegistrationPage(c *gin.Context) {
 	c.HTML(200, "registration.html", nil)
+}
+
+func RegistrationFormPage(c *gin.Context) {
+	login := c.PostForm("login")
+	password := c.PostForm("password")
+
+	repository.AddUser(login, password)
+
+	//Set cookie after registration
+	/*bufSecret := make([]byte, 32)
+
+	rand.Read(bufSecret)
+
+	c.SetCookie("session_token",
+		string(bufSecret[:]),
+		3600,
+		"/",
+		"",
+		false,
+		false)*/
+
+	c.Redirect(301, "/")
 }
