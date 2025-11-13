@@ -9,13 +9,14 @@ import (
 )
 
 func MessageWall(c *gin.Context) {
-	topic := c.DefaultQuery("topic", "main_table")
+	topic := c.DefaultQuery("topic", "message_main_table")
 
 	messageList, err := service.GetMesaages(topic)
 
 	//Topic is not exists
 	if err != nil {
 		c.String(404, fmt.Sprintf("No topic with name %s", topic))
+		return
 	}
 
 	c.HTML(200, "index.html", gin.H{

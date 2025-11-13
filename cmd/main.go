@@ -50,6 +50,14 @@ func routes(r *gin.Engine) {
 	r.GET("/login", controller.LoginPage)
 	r.POST("/login_form", controller.LoginFromPage)
 
+	r.GET("/registration", controller.RegistrationPage)
+	r.POST("/registration_form", controller.RegistrationFormPage)
+
+	auth := r.Group("auth")
+	{
+		auth.GET("/profile", nil)
+	}
+
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	r.NoRoute(controller.NoPage)
