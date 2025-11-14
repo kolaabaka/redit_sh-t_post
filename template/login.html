@@ -4,6 +4,7 @@
     <title>Login</title>
 </head>
 <form action="/login_form" method="POST">
+    <h3>{{.Error}}</h3>
     <label>login<input name="login" type="text"></label><br>
     <label>password<input name="password" type="password"></label><br>
     <button type="submit">Submit</button>

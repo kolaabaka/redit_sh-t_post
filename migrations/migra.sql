@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "sessions"
 (
-	session_id TEST PRIMARY KEY,
+	session_id TEXT PRIMARY KEY,
 	user_id INTEGER NOT NULL
 );
 

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"goSiteProject/internal/controller"
+	"goSiteProject/internal/middleware"
 	"goSiteProject/internal/monitoring"
 	"goSiteProject/internal/repository"
 	"goSiteProject/internal/service"
@@ -44,7 +45,7 @@ func main() {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP) //SIGTERM - kill <pid>, SIGHUP - close terminal
 	<-done
-	logger.Warn("OS was interrupted")
+	logger.Warn("SERVER was interrupted")
 	server.Shutdown(context)
 }
 
@@ -59,13 +60,15 @@ func routes(r *gin.Engine) {
 
 	r.GET("/login", controller.LoginPage)
 	r.POST("/login_form", controller.LoginFromPage)
+	r.GET("/log_out", controller.LogOut)
 
 	r.GET("/registration", controller.RegistrationPage)
 	r.POST("/registration_form", controller.RegistrationFormPage)
 
-	auth := r.Group("auth")
+	auth := r.Group("/")
+	auth.Use(middleware.AuthMiddl())
 	{
-		auth.GET("/profile", nil)
+		auth.GET("/profile", controller.AuthProfile)
 	}
 
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))

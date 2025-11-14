@@ -16,6 +16,8 @@ func initConnection() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	db.SetMaxOpenConns(1)
 	return db, nil
 }
 
