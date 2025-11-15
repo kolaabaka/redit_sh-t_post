@@ -14,11 +14,11 @@ import (
 
 func TestA(t *testing.T) {
 	//todo: use .env files
-
 	godotenv.Load()
 	fmt.Println(os.Getenv("TEMPLATE_PATH"))
 }
 
+// current test doesn`t work without makeFile and set TEMPLATE_PATH, doesn`t bother me =*)
 func TestLoginPage(t *testing.T) {
 	router := gin.Default()
 	app.SetupRoutes(router)
