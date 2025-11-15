@@ -14,6 +14,7 @@ import (
 
 func TestA(t *testing.T) {
 	//todo: use .env files
+
 	godotenv.Load()
 	fmt.Println(os.Getenv("TEMPLATE_PATH"))
 }
