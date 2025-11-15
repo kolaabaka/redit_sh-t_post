@@ -1,0 +1,8 @@
+name: Golang tests
+run-name: Run go tests
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "First joba, i hope will work..."
