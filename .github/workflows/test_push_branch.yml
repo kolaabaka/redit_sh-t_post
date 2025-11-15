@@ -19,6 +19,5 @@ jobs:
         with:
           go-version: '1.24'
        
-        
       - name: Run test with MakeFile
         run: make test TEMPLATE_PATH=${{ github.workspace }}

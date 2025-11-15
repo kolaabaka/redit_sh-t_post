@@ -15,6 +15,7 @@ ENV EXEC_FILE_NAME=${EXEC_FILE_NAME:-main}
 
 COPY /public ./public
 COPY /template ./template
+COPY /migrations ./migrations
 EXPOSE 8080
 HEALTHCHECK --interval=1m --retries=3 CMD curl localhost:8080
 #todo: create migrations
@@ -22,6 +23,6 @@ RUN apk update && apk upgrade\
     && apk add curl\
     && apk add sqlite\ 
     && mkdir db\
-    && sqlite3 db/topics.db "CREATE TABLE IF NOT EXISTS main_table (name TEXT, message TEXT, date TEXT);"
+    && sqlite3 db/topics.db < migrations/migra.sql
 COPY --from=compiler /go/go_files/${EXEC_FILE_NAME:-main}_opt .
 CMD ./${EXEC_FILE_NAME:-main}_opt
