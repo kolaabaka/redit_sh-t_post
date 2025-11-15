@@ -6,6 +6,7 @@ toolchain go1.24.3
 
 require (
 	github.com/gin-gonic/gin v1.11.0
+	github.com/joho/godotenv v1.5.1
 	github.com/kolaabaka/coloured_logger v1.0.4
 	github.com/mattn/go-sqlite3 v1.14.32
 	github.com/prometheus/client_golang v1.23.2
