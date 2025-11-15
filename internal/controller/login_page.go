@@ -21,7 +21,6 @@ func LoginFromPage(c *gin.Context) {
 		c.HTML(403, "login.html", gin.H{
 			"Error": "Login or password is/are wrong",
 		})
-		c.Abort()
 		return
 	}
 
@@ -58,5 +57,5 @@ func LogOut(c *gin.Context) {
 		"/",
 		false,
 		false)
-	c.Redirect(301, "/")
+	c.Redirect(302, "/")
 }
