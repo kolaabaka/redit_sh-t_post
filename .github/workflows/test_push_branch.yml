@@ -5,4 +5,5 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "First joba, i hope will work..."
+      - name: Run test with MakeFile
+        run: make test
